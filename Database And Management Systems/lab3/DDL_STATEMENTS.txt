@@ -1,0 +1,23 @@
+CREATE TABLE Train(Train_no int NOT NULL,Train_type int,Destination varchar(255),Train_name varchar(255),Availabilty varchar(255),Source varchar(255),PRIMARY KEY (Train_no));
+CREATE TABLE Compartment(Type int,capacity int,Availability int,Compartment_number int,Train_no int,FOREIGN KEY (Train_no) REFERENCES Train(Train_no));
+CREATE TABLE Route_Info(From_Station_no int,From_station_name varchar(255),Distance float,To_station_name varchar(255),To_station_no int,Train_no int, FOREIGN KEY(Train_no) REFERENCES Train(Train_no));
+CREATE TABLE Users(User_ID int NOT NULL,F_name varchar(255),L_name varchar(255),DOB Date,Pin_code int,Strret_no int,User_type int,Mobile varchar(10),PRIMARY KEY (User_id));
+CREATE TABLE Checks(Date_time_stamp Date,Train_no int, User_ID int,PRIMARY KEY (Train_no,User_ID),FOREIGN KEY (Train_no) REFERENCES Train(Train_no),FOREIGN KEY (User_ID) REFERENCES users(User_ID));
+CREATE TABLE Payment_Info(Transaction_number int NOT NULL,Card_no varchar(20),Bank varchar(255),PRIMARY KEY (Transaction_number));
+CREATE TABLE Fare_Table(Compartment_type int NOT NULL,Fare_per_km float,Train_type int,PRIMARY KEY (Compartment_type));
+CREATE TABLE Ticket(PNR int NOT NULL,Travel_date Date,Age int,Name varchar(255),Seat_no int,Departure Time,Arrival Time,User_ID int,Compartment_type int,PRIMARY KEY (PNR),FOREIGN KEY (User_ID) REFERENCES users(User_ID),FOREIGN KEY (Compartment_type) REFERENCES fare_table(Compartment_type)); 
+create table ticket_passenger(seat_no varchar(255),name varchar(255),age int, PNR varchar(255),PRIMARY KEY(seat_no),FOREIGN KEY (PNR) REFERENCES train_ticket(PNR));
+create table user_phone(User_ID varchar(255),phone_no int, PRIMARY KEY (phone_no),FOREIGN KEY (User_ID) REFERENCES users(User_ID));
+ALTER TABLE train MODIFY Train_name varchar(255) NOT NULL,MODIFY Train_type int NOT NULL;
+
+ALTER TABLE compartment ALTER Availability SET DEFAULT 'YES';
+
+ALTER TABLE ticket ADD UNIQUE (PNR);
+
+ALTER TABLE ticket ADD CHECK (Age>5);
+
+RENAME TABLE ticket TO train_ticket;
+
+CREATE VIEW bangalore_train AS SELECT Train_name,Train_type,Train_no FROM train;
+
+DROP VIEW bangalore_train;
